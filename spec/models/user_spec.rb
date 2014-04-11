@@ -3,7 +3,8 @@ require 'spec_helper'
 describe User do
   # beforeで@userを生成して、
   before(:each) do
-    @user = User.new(name: "Example User",email: "user@example.com")
+    @user = User.new(name: "Example User",email: "user@example.com",
+        password: "foobar", password_confirmation: "foobar")
   end
   # subject で以下の処理は全て@userに対してのテストとなる
   subject { @user }
@@ -11,6 +12,9 @@ describe User do
   it{ should respond_to(:name)}
   it{ should respond_to(:email)}
   it { should respond_to(:password_digest)}
+  it{should respond_to(:password)}
+  ## confirmation -> 二回入力する奴
+  it{should respond_to(:password_confirmation)}
 
   ### valid(検証)済みかどうかのチェック
   ## name に対する'検証'のテスト
@@ -70,7 +74,41 @@ describe User do
   end
 
   #### Passwordに対するテスト
-
+  # Passwordが空欄の時のテスト
+  describe "when password it not present" do
+    before do
+      @user = User.new(name: "Example User",email:'hoge@example.com',
+        password:" ",password_confirmation: " ")
+    end
+    it {should_not be_valid}
+  end
+  # passwordとconfirmationが一致してない場合のテスト
+  describe "when password doesnt match confirmation" do
+    before{ @user.password_confirmation = "mismatch"}
+    it {should_not be_valid}
+  end
+  
+  # パスワードの長さテスト
+  describe "with a password thats too short" do
+    before{ @user.password = @user.password_confirmation = "a"*5 }
+    it {should be_invalid}
+  end
+  # パスワードの検証に対するテスト
+  describe "return balue of authenticate method" do
+    before {@user.save}
+    ## emailでUserを検索するMethodを定義
+    let(:found_user) { User.find_by(email: @user.email) }
+    # パスワードが一致するテスト
+    describe "with valid password" do
+      it{should eq found_user.authenticate(@user.password)}
+    end
+    # パスワードが一致しないテスト
+    describe "with invalid password" do
+      let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+      it {should_not eq user_for_invalid_password }
+      specify {expect(user_for_invalid_password).to be_false}
+    end
+  end
 end
 
 
