@@ -72,6 +72,16 @@ describe User do
     ## 検証
     it {should_not be_valid }
   end
+  # アドレスが大文字小文字混じりの場合，小文字に変換しても検証が成功するかのテスト
+  describe "email address with mixed case" do
+    let(:mixed_case_email) { "Foor@ExAmple.CoM" }
+    it "should be saved as all lower-case" do
+      @user.email = mixed_case_email
+      @user.save
+      expect(@user.reload.email).to eq mixed_case_email.downcase
+    end
+    
+  end
 
   #### Passwordに対するテスト
   # Passwordが空欄の時のテスト
