@@ -43,12 +43,24 @@ Spork.prefork do
   #     --seed 1234
     config.order = "random"
     config.include Capybara::DSL
+
+    ### FactoryGirlとDatabaseClearnを組み合わせてSporkの再起動を不必要にする
+    config.before(:suite) do
+      DatabaseCleaner.strategy = :truncation
+      DatabaseCleaner.clean_with(:truncation)
+    end
+    config.before(:each) do 
+      DatabaseCleaner.start
+    end
+    config.after(:each) do
+      DatabaseCleaner.clean
+    end
   end
 end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-
+  FactoryGirl.reload 
 end
 
 # --- Instructions ---
