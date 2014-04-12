@@ -44,7 +44,7 @@ describe "User Pages" do
       end
       # ユーザーの作成、また、Countの増加の検証
       it "should create a user" do
-        expect{ click_button sublime}.to change(User,:count).by(1)
+        expect{ click_button submit}.to change(User,:count).by(1)
       end
     end
   end
