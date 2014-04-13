@@ -17,6 +17,7 @@ group :test do
   gem 'capybara','2.1.0'
   gem 'growl','1.0.3'
   gem 'factory_girl_rails','4.2.1'
+  gem 'cucumber-rails','1.4.0',:require => false
 end
 
 gem 'sass-rails', '4.0.2'

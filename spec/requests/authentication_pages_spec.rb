@@ -17,7 +17,8 @@ describe "Authentication" do
     describe "with invalid information" do
       before{click_button "Sign in"}
       it{should have_title("Sign in")}
-      it{should have_selector('div.alert.alert-error',text:'Invalid')}
+      #it{should have_selector('div.alert.alert-error',text:'Invalid')}
+      it {should have_error_message('Invalid')}
 
       # 再訪問後の正しい表示検証
       describe "after visiting another page" do
@@ -29,11 +30,12 @@ describe "Authentication" do
     # 入力情報が正しい場合に表示されるPageのテスト
     describe "with valid information" do
       let(:user) { FactoryGirl.create(:user) }
-      before do
-        fill_in "Email",with: user.email.upcase
-        fill_in "Password",with: user.password
-        click_button "Sign in"
-      end
+      #before do
+      #  fill_in "Email",with: user.email.upcase
+      #  fill_in "Password",with: user.password
+      #  click_button "Sign in"
+      #end
+      before{ valid_signin(user)}
       ## 表示のテスト
       it {should have_title(user.name)}
       it {should have_link('Profile',href: user_path(user))}
