@@ -15,6 +15,8 @@ describe User do
   it{should respond_to(:password)}
   ## confirmation -> 二回入力する奴
   it{should respond_to(:password_confirmation)}
+  it{ should respond_to(:remember_token)}
+  it{should respond_to(:authenticate)}
 
   ### valid(検証)済みかどうかのチェック
   ## name に対する'検証'のテスト
@@ -118,6 +120,12 @@ describe User do
       it {should_not eq user_for_invalid_password }
       specify {expect(user_for_invalid_password).to be_false}
     end
+  end
+
+  #秘密トークンに対する検証
+  describe "remember token" do
+    before {@user.save}
+    its(:remember_token){should_not be_blank}
   end
 end
 
