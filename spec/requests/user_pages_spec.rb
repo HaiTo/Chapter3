@@ -31,6 +31,12 @@ describe "User Pages" do
       it "shouldnot create a user" do
         expect {click_button submit}.not_to change(User,:count)
       end
+      # error文のテスト
+      describe "afeter submission" do
+        before{click_button submit}
+        it{ should have_title('Sign up')}
+        it{should have_content('error')}
+      end
     end
 
     #正しく検証された時のテスト
