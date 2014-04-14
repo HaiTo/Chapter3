@@ -99,6 +99,15 @@ describe "Authentication" do
           end
         end
       end
+
+      # マイクロソフトの制御テスト
+      describe "in the Microposts controller" do
+        # マイクロポストの生成
+        describe "submitting to the create action" do 
+          before {post microposts_path}
+          specify{expect(response).to redirect_to(signin_path)}
+        end
+      end
     end
     # 正しいユーザーであることを要求するテスト
     describe "as wrong user" do
