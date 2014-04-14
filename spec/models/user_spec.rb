@@ -15,8 +15,9 @@ describe User do
   it{should respond_to(:password)}
   ## confirmation -> 二回入力する奴
   it{should respond_to(:password_confirmation)}
-  it{ should respond_to(:remember_token)}
+  it{should respond_to(:remember_token)}
   it{should respond_to(:authenticate)}
+  it{should respond_to(:admin)}
 
   ### valid(検証)済みかどうかのチェック
   ## name に対する'検証'のテスト
@@ -126,6 +127,16 @@ describe User do
   describe "remember token" do
     before {@user.save}
     its(:remember_token){should_not be_blank}
+  end
+
+  # 管理者権限に対するテスト
+  it {should_not be_admin}
+  describe "with admin attribute set to 'ture'" do
+    before do
+      @user.save!
+      @user.toggle!(:admin)
+    end
+    it { should be_admin }
   end
 end
 
