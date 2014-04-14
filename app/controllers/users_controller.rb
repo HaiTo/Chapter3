@@ -19,6 +19,24 @@ class UsersController < ApplicationController
   		render 'new' 
   	end
   end
+
+  # Edit
+  def edit
+    @user = User.find_by(params[:id])
+  end
+
+  def update
+    @user = User.find_by(params[:id])
+    if @user.update_attributes(user_params)
+      ## Updateに成功した場合
+      flash[:success] = "Profile updated"
+      redirect_to @user
+    else
+      ## Updateに失敗した場合
+      render 'edit'
+    end
+  end
+
   private
     def user_params
       params.require(:user).permit(:name,:email,:password,:password_confirmation)
