@@ -48,11 +48,19 @@ describe "User Pages" do
   # profilePageに対するテスト
   describe "profile page" do
   	let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost,user:user,content:"Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost,user:user,content:"Bar") }
   	before { visit user_path(user)}
 
   	it {should have_content(user.name)} #Page内にuser.nameが含まれている事
   	it {should have_title(user.name)} #Titleがuser.nameであること
     
+    # マイクロソフトがProfilePageに表示されていることの検証
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
   end
 
   # signup-pageに関するテスト

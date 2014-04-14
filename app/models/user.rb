@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+	## 所有するModel
+	has_many :microposts,dependent: :destroy
 	#　検証：　validates
 	### :name に対する各走査
 	validates :name, presence: true, length: {maximum: 50}

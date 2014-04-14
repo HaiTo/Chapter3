@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 	def show
 		# URLのパラメータが自動的にparamsに入ってくる
 		@user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page:params[:page])
 	end
   def new
     redirect_to root_path unless current_user?(@user)
