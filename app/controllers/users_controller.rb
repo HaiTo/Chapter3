@@ -11,10 +11,12 @@ class UsersController < ApplicationController
 		@user = User.find(params[:id])
 	end
   def new
+    redirect_to root_path unless current_user?(@user)
     @user = User.new
   end
   # Createアクション
   def create
+    redirect_to root_path unless current_user?(@user)
   	@user = User.new(user_params)
   	if @user.save # 返り値はtrue | false
   		# 保存が成功した場合 
