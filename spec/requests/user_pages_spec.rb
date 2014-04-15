@@ -61,6 +61,60 @@ describe "User Pages" do
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
     end
+
+    ## フォロー/アンフォローボタンの実装テスト
+    describe "follow/unfollow buttuns" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in user}
+
+      # フォローする挙動のテスト
+      describe "following a user" do
+        before { visit user_path(other_user)}
+        # フォロー数はインクリメントされる事
+        it "should increment the followed user count" do
+          expect do
+            click_button "Follow"
+          end.to change(user.followed_users, :count).by(1)
+        end
+        # フォローされた側は、フォロワー数をインクリメントされること
+        it "should increment the other user's followers count" do
+          expect do
+            click_button "Follow"
+          end.to change(other_user.followers,:count).by(1)
+        end
+
+        describe "toggling the button" do
+          before {click_button "Follow"}
+          it { should have_xpath("//input[@value='Unfollow']") }
+        end
+      end
+
+      # アンフォローする挙動のテスト
+      describe "unfollowing a user" do
+        before do
+          user.follow!(other_user)
+          visit user_path(other_user)
+        end
+        # アンフォローボタンを押されたら、デクリメントされること
+        it "should decrement the followed user count" do
+          expect do
+            click_button "Unfollow"
+          end.to change(user.followed_users,:count).by(-1)
+        end
+        # アンフォローボタンを押されたがわも、デクリメントされること
+        it "should decrement the other user's followers count" do
+          expect do
+            click_button "Unfollow"
+          end.to change(other_user.followers, :count).by(-1)
+        end
+
+        # トグルがたのボタンであること
+        describe "toggling the button" do
+          before {click_button "Unfollow"}
+          it { should have_xpath("//input[@value='Follow']") }
+        end
+      end
+    end
   end
 
   # signup-pageに関するテスト
@@ -155,4 +209,55 @@ describe "User Pages" do
       specify {expect(user.reload.email).to eq new_email}
     end
   end
+
+  # following/followerに対するテスト
+  describe "following/followers" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    before { user.follow!(other_user)}
+
+    # フォロー中ユーザー一覧ページ、に対するテスト
+    describe "followed users" do
+      before do
+        sign_in user #userPageにサインイン
+        visit following_user_path(user) #フォロー一覧ページに移動
+      end
+      it { should have_title(full_title('Following')) } 
+      #h3タグで、Followingという選択があること
+      it { should have_selector('h3',text: 'Following') } 
+      # other_userのNameを表示してある、other_userへのPATHが貼られてるLinkがあること
+      it { should have_link(other_user.name,href: user_path(other_user)) }
+    end
+
+    #フォローされているユーザー一覧ページ、に対するテスト
+    describe "followers" do
+      before do
+        sign_in other_user
+        visit followers_user_path(other_user)
+      end
+      it { should have_title(full_title('Followers')) }
+      it { should have_selector('h3',text:'Followers') }
+      it { should have_link(user.name, href: user_path(user)) }
+    end
+
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

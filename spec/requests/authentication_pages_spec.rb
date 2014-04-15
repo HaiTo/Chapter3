@@ -53,8 +53,9 @@ describe "Authentication" do
     end
   end
 
-  # authorization機能の検証．Edit，Updateアクションに認証をつける
+  # authorizationが必要な機能、全てのテスト
   describe "authorization" do
+    ## サインイン済みユーザーの挙動
     describe "for mon-singed-in user" do
       let(:user) { FactoryGirl.create(:user) }
       describe "when attempting to visit a protected page" do
@@ -90,13 +91,25 @@ describe "Authentication" do
         specify{expect(response).to redirect_to(signin_path)}
       end
 
-      # Indexアクションが保護されていることをテスト
+      # ユーザーのコントローラーに関するテスト
       describe "in the User controller" do
         describe "visiting the user controller" do
           describe "visiting the user index" do
             before {visit users_path}
             it { should have_title('Sign in') }
           end
+        end
+        ## フォローユーザー一覧ページのテスト
+        describe "visiting the following page" do
+          #フォロー中ユーザー一覧ページに移動して
+          before{ visit following_user_path(user)} 
+          # タイトルにSign in を含んでいるか？
+          it { should have_title("Sign in") }
+        end
+        ## 被フォローユーザー一覧ページのテスト
+        describe "visiting the followers page" do
+          before {visit followers_user_path(user)}
+          it { should have_title("Sign in") }
         end
       end
 
@@ -106,6 +119,18 @@ describe "Authentication" do
         describe "submitting to the create action" do 
           before {post microposts_path}
           specify{expect(response).to redirect_to(signin_path)}
+        end
+      end
+
+      # Relationships コントローラーに対するテスト
+      describe "in the Relationships controller" do
+        describe "submitting to the create action" do
+          before { post relationships_path}
+          specify{expect(response).to redirect_to(signin_path)}
+        end
+        describe "submitting to the destroy action" do
+          before {delete relationship_path(1)}
+          specify {expect(response).to redirect_to(signin_path)}
         end
       end
     end
