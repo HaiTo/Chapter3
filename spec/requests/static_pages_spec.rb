@@ -41,6 +41,13 @@ describe "Static Pages" do
         it { should have_link("0 following",href: following_user_path(user)) }
         it { should have_link("1 followers",href: followers_user_path(user)) }
       end
+
+      # 統計情報のテスト：マイクロソフトの所有数のテスト/ RootPATH
+      describe "Micropost counts" do
+        #let(:micropost) { 30.times{FactoryGirl.create(:micropost,user: user)} }
+        #before {visit users_path(user)}
+        it { should have_content("#{user.microposts.size} microposts") }
+      end
     end
   end
 

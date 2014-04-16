@@ -169,6 +169,15 @@ describe User do
         expect(Micropost.where(id: micropost.id)).to be_empty
       end
     end
+
+    # あるUserが破棄された場合、そのユーザーのRelationShipの削除をテストする
+    it "should destroy accosiated relationships" do
+      relationships = @user.relationships
+      @user.destroy
+      relationships.each do |relationship|
+        expect(Relationship.where(followed_id: user.id)).to be_empty
+      end
+    end
     ## status feed に対するTest
     describe "status" do
       let(:unfollowed_post)do
