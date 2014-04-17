@@ -34,4 +34,16 @@ describe "Microposts" do
     before { @microposts.content = "a"*141}
     it { should_not be_valid }
   end
+
+  # まいくろぽすとのInReplyToについてのテスト
+  describe "with have in_reply_to" do
+    let(:reply_user) { FactoryGirl.create(:user,name:"ReplyMan") }
+    before do
+      user = reply_user
+      @microposts.content = "@#{user.name} Loerm ipsum"
+    end
+    it "have in_reply_to #{user.name}" do
+      
+    end
+  end
 end
