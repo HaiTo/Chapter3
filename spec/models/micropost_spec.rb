@@ -37,13 +37,11 @@ describe "Microposts" do
 
   # まいくろぽすとのInReplyToについてのテスト
   describe "with have in_reply_to" do
-    let(:reply_user) { FactoryGirl.create(:user,name:"ReplyMan") }
+    let(:user) { FactoryGirl.create(:user) }
+    #let(:reply_user) { FactoryGirl.create(:user,name:"ReplyMan") }
+    let(:micropost) { FactoryGirl.create(:micropost,user:user,content:"@ReplyMan hoge") }
     before do
-      user = reply_user
-      @microposts.content = "@#{user.name} Loerm ipsum"
     end
-    it "have in_reply_to #{user.name}" do
-      
-    end
+    it {p micropost}
   end
 end
