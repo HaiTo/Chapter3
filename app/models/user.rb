@@ -37,7 +37,6 @@ class User < ActiveRecord::Base
 	end
 
  	def feed
- 		## このコードは不完全
  		Micropost.from_users_followed_by(self)
  	end
 
