@@ -16,4 +16,5 @@ Reply機能の実装
 
 * MicropostModel上に実装すべき？　コントローラーではなく。validateみたいな感じ。
 * Specとしてかけねぇ……
+	* MicrpostModelのTestは出来たので，次はコントローラーの実装
   
