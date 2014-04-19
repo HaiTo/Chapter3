@@ -30,6 +30,7 @@ class MicropostsController < ApplicationController
     end
 
     def matching_reply
-      $& if (params[:content] =~ /(@\w*)/i) != ""
+      params[:micropost][:content] =~ /(@\w*)/i  # $&
+      return $&  
     end
 end
