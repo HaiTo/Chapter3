@@ -17,4 +17,7 @@ Reply機能の実装
 * MicropostModel上に実装すべき？　コントローラーではなく。validateみたいな感じ。
 * Specとしてかけねぇ……
 	* MicrpostModelのTestは出来たので，次はコントローラーの実装
-  
+
+### todo
+
+* contentを埋め込む際に、 @id にだけ user_idへのLinkをはる方法を考える
